@@ -624,7 +624,11 @@
         </section>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
+        // EmailJS initialization
+        emailjs.init("KXxM-HK2_J9v_WhHL");
+
         // Simple navigation functionality
         document.addEventListener('DOMContentLoaded', function() {
             const navLinks = document.querySelectorAll('.nav-link');
@@ -660,17 +664,31 @@
                 });
             });
 
-            // Form submission (basic handling)
+            // EmailJS form submission
             const contactForm = document.querySelector('.contact-form');
             if (contactForm) {
                 contactForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    alert('Thank you for your message! I will get back to you soon.');
-                    this.reset();
+                    
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    submitBtn.textContent = 'Sending...';
+                    submitBtn.disabled = true;
+                    
+                    emailjs.sendForm('service_6568upa', 'template_6nnq6qn', this)
+                        .then(function() {
+                            alert('Thank you for your message! I will get back to you soon.');
+                            contactForm.reset();
+                        }, function(error) {
+                            alert('Failed to send message. Please try again.');
+                            console.log('EmailJS error:', error);
+                        })
+                        .finally(function() {
+                            submitBtn.textContent = 'Send Message';
+                            submitBtn.disabled = false;
+                        });
                 });
             }
         });
     </script>
 </body>
 </html>
-<!-- End of index.html -->
